@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Payment Callback</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        padding-top: 100px;
+        background: #f5f5f5;
+      }
+      .status {
+        font-size: 24px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="status"
+      id="status">
+      Processing...
+    </div>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const status = params.get('status');
+      const reference = params.get('reference');
+
+      document.getElementById('status').innerText =
+        status === 'success'
+          ? `Payment Successful. Reference: ${reference}`
+          : 'Payment Failed or Cancelled';
+
+      setTimeout(() => {
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({ status, reference })
+          );
+        }
+      }, 2000);
+    </script>
+  </body>
+</html>
